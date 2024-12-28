@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опрос для разработки сайта</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff6e6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #ff8c00;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 1.5rem;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ffcc80;
+            border-radius: 8px;
+            background-color: #fff2cc;
+        }
+
+        .answers {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .answers textarea {
+            width: 100%;
+            height: 60px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ff8c00;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            background-color: #ff8c00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn:disabled {
+            background-color: #ffd699;
+            cursor: not-allowed;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #ff8c00;
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    Опрос для разработки сайта
+</header>
+
+<main>
+    <div id="survey-container">
+        <div id="question-box" class="question"></div>
+        <div class="answers">
+            <textarea id="answer-input" placeholder="Введите ваш ответ..."></textarea>
+            <button id="next-btn" class="btn" disabled>Следующий</button>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2024 Surge Development
+</footer>
+
+<script>
+    const questions = [
+        "Какую цель вы хотите достичь с помощью сайта?",
+        "Какой тип сайта вам нужен (интернет-магазин, корпоративный сайт, лендинг и т.д.)?",
+        "Есть ли у вас примеры сайтов, которые вам нравятся?",
+        "Какой функционал должен быть на сайте (например, форма обратной связи, каталог товаров)?",
+        "У вас есть логотип и фирменный стиль?",
+        "Сколько страниц должно быть на сайте?",
+        "Есть ли у вас контент для сайта (тексты, изображения)?",
+        "Какой бюджет вы готовы выделить на разработку?",
+        "Какой срок выполнения проекта вам подходит?",
+        "Есть ли дополнительные пожелания или требования?"
+    ];
+
+    let currentQuestionIndex = 0;
+    const questionBox = document.getElementById('question-box');
+    const answerInput = document.getElementById('answer-input');
+    const nextBtn = document.getElementById('next-btn');
+    const answers = [];
+
+    function updateQuestion() {
+        questionBox.textContent = questions[currentQuestionIndex];
+        answerInput.value = '';
+        nextBtn.disabled = true;
+    }
+
+    answerInput.addEventListener('input', () => {
+        nextBtn.disabled = answerInput.value.trim() === '';
+    });
+
+    nextBtn.addEventListener('click', () => {
+        answers.push(answerInput.value.trim());
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            updateQuestion();
+        } else {
+            submitAnswers();
+        }
+    });
+
+    function submitAnswers() {
+        const data = JSON.stringify(answers);
+
+        // Отправка данных в Telegram через WebApp
+        if (window.Telegram && Telegram.WebApp) {
+            Telegram.WebApp.sendData(data);
+        }
+
+        document.body.innerHTML = '<h2 style="text-align:center; margin-top: 20px;">Спасибо за ваши ответы!</h2>';
+    }
+
+    updateQuestion();
+</script>
+</body>
+</html>
